@@ -226,27 +226,22 @@ string CMessageDigestAlgorithm5::ByteToHexString(const Byte *input, size_t lengt
     return str;
 }
 
-/***************************************************
-*參数：str表示待加密文本
-*功能：MD5算法主函数
-*返回值：MD5加密后算列值
-****************************************************/
-string CMessageDigestAlgorithm5::Encode(string &str)
-{
-    Initialize();
-    EncodeByte((const Byte *)(str.c_str()), str.length());
-    Final();
-    string strMD5 = ByteToHexString(m_Result, 16);
-    return strMD5;
-}
 
 /***************************************************
 *參数：infile表示待加密文件
 *功能：MD5算法主函数
 *返回值：MD5加密后算列值
 ****************************************************/
-string CMessageDigestAlgorithm5::Encode(string src)
+string CMessageDigestAlgorithm5::Encode(string src, bool file)
 {
+    Initialize();
+    if (!file)
+    {
+        EncodeByte((const Byte *)(src.c_str()), src.length());
+        Final();
+        string strMD5 = ByteToHexString(m_Result, 16);
+        return strMD5;
+    }
     ifstream infile(src);
     if (!infile)
     {

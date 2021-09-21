@@ -13,9 +13,8 @@ public:
 	CMessageDigestAlgorithm5(void);
 	~CMessageDigestAlgorithm5(void);
 
-	//MD5算法主函数,对str加密
-	string Encode(string &str);
-	string Encode(string src);
+	//encode file
+	string Encode(string src,bool file);
 
 private:
 	unsigned int F(unsigned int x, unsigned int y,unsigned int z);
