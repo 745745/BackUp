@@ -2,11 +2,12 @@
 #include "./copy.h"
 #include "./pack.h"
 #include "./Encryption.h"
-#include"./verify.h"
+#include "./verify.h"
 using namespace std;
 
 int main()
 {
+   copyDir("../test",".");
 }
 
 /*
@@ -19,9 +20,6 @@ int main()
       cout<<"verify pass";
    else cout<<"verify failed";
 
-   Encryption a;
-   a.encryption("./test_case/4","./test_case/1");
-   a.decryption("./test_case/5","./test_case/4");
 
    //test for packFile function.
    packFile p;

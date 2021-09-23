@@ -126,7 +126,8 @@ int copyFile(string dest, string src)
     int size = statbuf.st_size;
     int d, s;
 
-    s = open(src.c_str(), O_RDONLY | O_CREAT, 0777);
+    //s = open(src.c_str(), O_RDONLY | O_CREAT, 0777);
+    s = open(src.c_str(), O_RDONLY);
     if (access(dest.c_str(), F_OK)) //dest file do not exist, create one and copy the content from src file
     {
         d = open(dest.c_str(), O_WRONLY | O_CREAT);

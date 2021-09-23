@@ -35,6 +35,7 @@ public:
     void encryp(unsigned char* input);
     void decryp(unsigned char* input);
 
+    //key must has 16 bytes.If it's less than that,have to add padding to 16 bytes
     void setKey(unsigned char*  key);
     void setState(unsigned char* stat);
 
