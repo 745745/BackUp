@@ -28,8 +28,6 @@ using namespace std;
 #define HARDLNK '4'
 
 
-extern mutex mtx;
-
 const char magic[] = "Recordh";
 union Record
 {

@@ -12,20 +12,31 @@
 #include <pwd.h>
 #include <grp.h>
 #include <utime.h>
-#include"./MD5.h"
+#include <map>
+#include "./MD5.h"
 using namespace std;
 
 class Verify
 {
-    public:
-    //verify=need verified file's name 
-    void writeVerifyInfo(int fd,string verify);
+public:
+    //verify=need verified file's name
+    void writeVerifyInfo(string verify);
     //fileDir=need verified dir's name. dest=verify info file's path
-    void writeVerifyInfo(string fileDir,string dest);
+    void writeDirVerifyInfo(string fileDir);
 
     //use verify file to verify a file or a dir
-    bool VerifyFiles(string file,string verifyFile);
+    bool verify(string verifyFile,string file);
 
-    private:
+    bool VerifyDir(string file);
+
+    bool VerifySingleFile(string file);
+
+    void readVerifyFile(string file);
+
+    Verify();
+
+private:
     CMessageDigestAlgorithm5 MD5;
+    int fd;
+    map<string, string> fileMD5;
 };

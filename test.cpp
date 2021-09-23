@@ -2,12 +2,16 @@
 #include "./copy.h"
 #include "./pack.h"
 #include "./Encryption.h"
-#include"./MD5.h"
+#include"./verify.h"
 using namespace std;
 
 int main()
 {
-   
+   Verify a;
+   a.writeDirVerifyInfo("../code");
+   bool t=a.verify("./Verify.ver","../code");
+   if(t)
+      cout<<"verify pass";
 }
 
 /*

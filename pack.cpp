@@ -1,7 +1,6 @@
 #include "./pack.h"
 
 extern int getFileMode(struct stat *st);
-mutex mtx;
 //link is the src link file. linkName is field been set
 //when hardLink=true, link is the link path
 void setLinkName(bool hardLink, int mode, char *link, char *linkName)
@@ -176,7 +175,6 @@ char *packFile::setHead(string src)
 
 void packFile::readFile(string src)
 {
-    mtx.lock();
     char *head = setHead(src);
     blocks.push_back(head);
     int size = 0;
@@ -198,7 +196,6 @@ void packFile::readFile(string src)
         memcpy(content, buf, readsize);
         blocks.push_back(content);
     }
-    mtx.unlock();
     return;
 }
 
@@ -247,7 +244,6 @@ void packFile::loadAllFile()
 
 void packFile::saveAsFile(string dest)
 {
-    mtx.lock();
     string fileName = dest + "./" + "packFile.wzy";
     umask(0000);
     int fd = open(fileName.c_str(), O_WRONLY | O_CREAT, 0777);
@@ -255,7 +251,6 @@ void packFile::saveAsFile(string dest)
     {
         write(fd, blocks[i], 512);
     }
-    mtx.unlock();
     close(fd);
 }
 
