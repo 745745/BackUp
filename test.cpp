@@ -7,16 +7,17 @@ using namespace std;
 
 int main()
 {
-   Verify a;
-   a.writeDirVerifyInfo("../code");
-   bool t=a.verify("./Verify.ver","../code");
-   if(t)
-      cout<<"verify pass";
 }
 
 /*
 
 
+   Verify a;
+   a.writeDirVerifyInfo("../code");
+   bool t=a.verify("./Verify.ver","../code");
+   if(t)
+      cout<<"verify pass";
+   else cout<<"verify failed";
 
    Encryption a;
    a.encryption("./test_case/4","./test_case/1");

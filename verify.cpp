@@ -74,13 +74,17 @@ bool Verify::VerifyDir(string file)
         {
             if (!VerifyDir(src))
             {
+                cout<<"failed, dir is:"<<src<<endl;
                 return false;
             }
         }
         else
         {
-            if(VerifySingleFile(src))
+            if(!VerifySingleFile(src))
+            {
+                cout<<"failed, src is:"<<src<<endl;
                 return false;
+            }
         }
     }
     return true;
@@ -104,11 +108,14 @@ void Verify::readVerifyFile(string file)
 
 bool Verify::VerifySingleFile(string file)
 {
-    auto i=fileMD5.find(file);
+    char* p=realpath(file.c_str(),nullptr);
+    string path=p;
+    auto i=fileMD5.find(path);
     if(i!=fileMD5.end())
     {
         string md=i->second;
-        string mdCurrent=MD5.Encode(file,true);
+        md=md.substr(0,md.length()-1);
+        string mdCurrent=MD5.Encode(path,true);
         if(md!=mdCurrent)
             return false;
         else return true;
@@ -128,6 +135,6 @@ bool Verify::verify(string verifyFile,string file)
 
 Verify::Verify()
 {
-    fd = open("./Verify.ver", O_CREAT | O_RDWR);
+    fd = open("./Verify.ver", O_CREAT | O_RDWR|O_TRUNC);
     chmod("./Verify.ver", 0777);
 }
