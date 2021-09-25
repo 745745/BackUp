@@ -1,17 +1,17 @@
-#include"client.h"
+#include "client.h"
 
+int port = 50836;
 
 bool client::socketInit()
 {
-    sock=socket(AF_INET,SOCK_STREAM,0);
+    sock = socket(AF_INET, SOCK_STREAM, 0);
     struct sockaddr_in addr;
-    memset(&addr,0,sizeof(addr));
-    addr.sin_family=AF_INET;
-    addr.sin_addr.s_addr=inet_addr("127.0.0.1");
-    addr.sin_port=htons(17902);
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = inet_addr("1.15.63.103");
+    addr.sin_port = htons(port);
 
-    
-    if(connect(sock,(struct sockaddr*)&addr,sizeof(addr)))
+    if (connect(sock, (struct sockaddr *)&addr, sizeof(addr)))
     {
         perror("connect:");
         return false;
@@ -19,19 +19,22 @@ bool client::socketInit()
     return true;
 }
 
-
 bool client::logIn(string user, string password)
 {
-    user+="\n";
-    password+="\n";
+    char sig='1';
+    write(sock, &sig, 1);
     char buf;
-    write(sock,user.c_str(),user.length());
-    write(sock,password.c_str(),password.length());
-    read(sock,&buf,1);
+    int len = user.length();
+    write(sock, &len, 4);
+    write(sock, user.c_str(), user.length());
+    len = password.length();
+    write(sock, &len, 4);
+    write(sock, password.c_str(), password.length());
+    read(sock, &buf, 1);
 
-    if(buf='0')
+    if (buf = '0')
     {
-        hasLogIn=true;
+        hasLogIn = true;
         return true;
     }
     else
@@ -40,31 +43,53 @@ bool client::logIn(string user, string password)
 
 void client::sendFile(string src)
 {
-    int fd=open(src.c_str(),O_RDWR);
-    char buf[50];
-    int size=0;
-    while (size=read(fd,buf,50))
+    char sig = '2';
+    write(sock, &sig, 1);
+    int fd = open(src.c_str(), O_RDWR);
+    char buf[512];
+    int size = 0;
+    struct stat st;
+    stat(src.c_str(), &st);
+    int tot = st.st_size;
+    write(sock, &tot, sizeof(int));
+
+    while ((size = read(fd, buf, 512)) > 0)
     {
-        write(sock,buf,size);
+        write(sock, buf, size);
     }
     return;
 }
 
 void client::receiveFile(string dest)
 {
-    int fd=open(dest.c_str(),O_WRONLY|O_CREAT|O_TRUNC);
-    char buf[50];
-    int size=0;
-    
-    write(sock,"request",8);
+    int fd = open(dest.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0777);
+    char buf[512];
+    int size = 0;
 
-    int totalSize=0;
-    read(sock,&totalSize,sizeof(totalSize));
+    char sig = '3';
+    write(sock, &sig, 1);
 
-    while(size=read(sock,buf,50) && totalSize>0)
+    int totalSize = 0;
+    read(sock, &totalSize, sizeof(int));
+
+    while (totalSize > 0 && ((size = read(sock, buf, 512)) > 0))
     {
-        totalSize-=size;
-        write(fd,buf,size);
+        totalSize -= size;
+        write(fd, buf, size);
     }
     return;
+}
+
+void client::logOut()
+{
+    hasLogIn = false;
+    char sig = '0';
+    write(sock, &sig, 1);
+    close(sock);
+}
+
+client::~client()
+{
+    if (hasLogIn == true)
+        logOut();
 }

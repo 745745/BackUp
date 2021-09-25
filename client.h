@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include<string.h>
+#include<sys/stat.h>
 #include <fcntl.h>
 using namespace std;
 
@@ -17,6 +18,8 @@ public:
     void sendFile(string src);
     void receiveFile(string dest);
     bool socketInit();
+    void logOut();
+    ~client();
 private:
     bool hasLogIn;
     int sock;

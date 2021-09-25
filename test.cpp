@@ -3,14 +3,24 @@
 #include "./pack.h"
 #include "./Encryption.h"
 #include "./verify.h"
+#include "client.h"
 using namespace std;
 
 int main()
 {
-   copyDir("../test",".");
+   client a;
+   a.socketInit();
+   a.logIn("wzy","123");
+   a.receiveFile("../ppp");
 }
 
 /*
+
+   a.sendFile("../packFile.wzy");
+   a.receiveFile("./pppp");
+
+   packFile p;
+   p.unpack("../test","./pppp");
 
 
    Verify a;
