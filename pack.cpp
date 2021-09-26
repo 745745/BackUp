@@ -244,7 +244,7 @@ void packFile::loadAllFile()
 
 void packFile::saveAsFile(string dest)
 {
-    string fileName = dest + "./" + "packFile.wzy";
+    string fileName = dest + "/" + "packFile.wzy";
     umask(0000);
     int fd = open(fileName.c_str(), O_WRONLY | O_CREAT, 0777);
     for (int i = 0; i < blocks.size(); i++)
@@ -263,6 +263,31 @@ bool checkHead(char *buf)
     }
     else
         return false;
+}
+
+
+
+string getRealPath(string &dest,string src,string dir)
+{
+    if(src==dir)
+    {
+        for(int i=dir.length();;i--)
+        {
+            if(src[i]=='/')
+            {
+                string x=src.substr(i);
+                dest=dest+x;
+                return dest;
+            }
+        }
+    }
+    int pos=src.find(dir);
+    if(pos==src.npos)
+    {
+        return src;
+    }
+    string p=src.substr(pos+dir.length()+1);
+    return dest+"/"+p;
 }
 
 //dest must exist
@@ -286,13 +311,16 @@ void packFile::unpack(string dest, string packSrc)
     int readsize = 0;
     long size = 0;
 
+    string dir="";
     while (readsize = read(fd, buf, 512))
     {
         if (checkHead(buf)) //header
         {
             Record::head *p = (Record::head *)buf;
-
-            string name = dest + '/' + deletePrefix(p->name);
+            if(dir.length()==0)
+                dir=p->name;
+            string qqq=p->name;
+            string name = getRealPath(dest,p->name,dir);
             if (access(name.c_str(), F_OK))
             {
                 if (*p->type == DIRENT)
@@ -348,3 +376,4 @@ void packFile::unpack(string dest, string packSrc)
         }
     }
 }
+

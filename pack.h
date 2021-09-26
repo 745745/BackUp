@@ -66,6 +66,6 @@ public:
     char *setHead(string src);
     void recoverFromPack(string pack);
     void unpack(string dest, string packSrc);
-    
+    //vector<string> getFileListFromPack(string src);
     bool verify(string src,string packfile);
 };
