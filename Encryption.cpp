@@ -268,6 +268,7 @@ void Encryption::setState(unsigned char *stat)
 
 int Encryption::encryption(string dest, string src)
 {
+    dest+="/enpPKG";
     int fd = open(src.c_str(), O_RDWR);
     int wd = open(dest.c_str(), O_CREAT | O_WRONLY);
 
@@ -323,6 +324,7 @@ int Encryption::encryption(string dest, string src)
 
 int Encryption::decryption(string dest, string src)
 {
+    dest+="/depPKG";
     int fd = open(src.c_str(), O_RDWR);
     int wd = open(dest.c_str(), O_CREAT | O_WRONLY);
     struct stat st;
@@ -371,6 +373,7 @@ int Encryption::decryption(string dest, string src)
     }
     close(fd);
     close(wd);
+    return 0;
 }
 
 int Encryption::checkPadding(unsigned char *input)

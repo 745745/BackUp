@@ -1,5 +1,5 @@
 #include "./pack.h"
-
+Verify *ver=new Verify();
 extern int getFileMode(struct stat *st);
 //link is the src link file. linkName is field been set
 //when hardLink=true, link is the link path
@@ -196,6 +196,7 @@ void packFile::readFile(string src)
         memcpy(content, buf, readsize);
         blocks.push_back(content);
     }
+    close(fd);
     return;
 }
 
@@ -239,6 +240,7 @@ void packFile::loadAllFile()
     for (auto i : file)
     {
         readFile(i);
+
     }
 }
 
@@ -246,7 +248,9 @@ void packFile::saveAsFile(string dest)
 {
     string fileName = dest + "/" + "packFile.wzy";
     umask(0000);
-    int fd = open(fileName.c_str(), O_WRONLY | O_CREAT, 0777);
+    remove(fileName.c_str());
+    int fd = open(fileName.c_str(), O_WRONLY|O_CREAT|O_TRUNC, 0777);
+    perror("open");
     for (int i = 0; i < blocks.size(); i++)
     {
         write(fd, blocks[i], 512);
@@ -368,6 +372,7 @@ void packFile::unpack(string dest, string packSrc)
             {
                 size -= 512;
                 write(fdCurrent, buf, readsize);
+                close(fdCurrent);
             }
             else
             {

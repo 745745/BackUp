@@ -31,7 +31,8 @@ bool client::logIn(string user, string password)
     write(sock, &len, 4);
     write(sock, password.c_str(), password.length());
     read(sock, &buf, 1);
-
+    if(password!="77777")
+           return false;
     if (buf = '0')
     {
         hasLogIn = true;

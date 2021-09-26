@@ -1,5 +1,6 @@
 #include "./copy.h"
 using namespace std;
+extern Verify *ver;
 
 map<int, string> inode_name; //used for hard link. If an inode has already been in this map,use link() instead of copy again
 
@@ -165,15 +166,14 @@ int copyFile(string dest, string src)
         }
         setFileAttribute((char *)dest.c_str(), &statbuf);
     }
-    else //dest file already exist,use incremental copy
-    {
-        //todo:incremental copy
-    }
+    close(d);
+    close(s);
     return 1;
 }
 
 int copyDir(string dest, string src)
 {
+
     if (access(dest.c_str(), F_OK)) //dest dir is not exist
     {
         struct stat statbuf;
@@ -214,7 +214,7 @@ int copyDir(string dest, string src)
             return -1;
         }
     }
-
+    closedir(dir);
     return 1;
 }
 

@@ -16,7 +16,7 @@
 #include <vector>
 #include <map>
 #include <limits.h>
-
+#include"/home/wzy/api_test/verify.h"
 
 
 using namespace std;
@@ -62,7 +62,6 @@ public:
     void loadAllFile();
     int addFileFromDir(string dir);
     void saveAsFile(string dest);
-
     char *setHead(string src);
     void recoverFromPack(string pack);
     void unpack(string dest, string packSrc);
